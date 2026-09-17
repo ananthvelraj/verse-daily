@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#15130f">
+  <meta name="description" content="A daily word ritual for poetry, professional clarity, and romantic conversation.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <title>Verse Daily — Word of the Day</title>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="Verse Daily home"><span aria-hidden="true">¶</span> Verse Daily</a>
+    <div class="streak" id="streak">Day 1 of your practice</div>
+  </header>
+
+  <main>
+    <section class="word-card" aria-labelledby="word">
+      <div class="date-row">
+        <p id="date">Today</p>
+        <div class="nav-buttons" aria-label="Change day">
+          <button id="previous" type="button" aria-label="Previous word">←</button>
+          <button id="today" type="button">Today</button>
+          <button id="next" type="button" aria-label="Next word">→</button>
+        </div>
+      </div>
+
+      <div id="loading" class="loading">Opening today’s page…</div>
+      <div id="content" hidden>
+        <div class="word-line">
+          <div>
+            <p class="eyebrow" id="partOfSpeech"></p>
+            <h1 id="word"></h1>
+            <p class="pronunciation" id="pronunciation"></p>
+          </div>
+          <button class="listen" id="listen" type="button" aria-label="Hear pronunciation">Listen <span aria-hidden="true">◖))</span></button>
+        </div>
+        <p class="meaning" id="meaning"></p>
+
+        <blockquote>
+          <p id="poeticSentence"></p>
+          <cite>Poetic use</cite>
+        </blockquote>
+
+        <div class="uses">
+          <article>
+            <span>At work</span>
+            <p id="professionalSentence"></p>
+          </article>
+          <article>
+            <span>With someone dear</span>
+            <p id="romanticSentence"></p>
+          </article>
+        </div>
+
+        <div class="details">
+          <div><span>Origin</span><p id="origin"></p></div>
+          <div><span>Synonyms</span><p id="synonyms"></p></div>
+        </div>
+
+        <div class="actions">
+          <button class="primary" id="remember" type="button">Mark as remembered</button>
+          <a id="study" target="_blank" rel="noopener">Study this word ↗</a>
+        </div>
+      </div>
+      <div id="error" class="error" hidden></div>
+    </section>
+
+    <aside class="practice">
+      <p class="eyebrow">A five-minute ritual</p>
+      <h2>Make it yours.</h2>
+      <ol>
+        <li><span>1</span><p><strong>Say it</strong> aloud three times.</p></li>
+        <li><span>2</span><p><strong>Picture it</strong> in a real moment.</p></li>
+        <li><span>3</span><p><strong>Write one line</strong> that only you could write.</p></li>
+      </ol>
+      <label for="line">Your line for today</label>
+      <textarea id="line" rows="5" placeholder="Let the word find its place…"></textarea>
+      <p class="saved" id="saved" aria-live="polite"></p>
+    </aside>
+  </main>
+
+  <footer>“Words can be like X-rays if you use them properly.” <cite>— Aldous Huxley</cite></footer>
+  <script src="app.js"></script>
+</body>
+</html>
