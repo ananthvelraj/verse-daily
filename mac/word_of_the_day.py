@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """macOS dialog for Verse Daily. Uses only Python's standard library."""
-import json, subprocess, urllib.parse, urllib.request, webbrowser
+import json, subprocess, urllib.parse, webbrowser
 from datetime import date
 from pathlib import Path
 
@@ -10,12 +10,18 @@ CACHE = Path.home() / "Library/Caches/VerseDaily/words.json"
 
 def fetch_words():
     try:
-        with urllib.request.urlopen(DATA_URL, timeout=8) as response:
-            data = response.read()
+        result = subprocess.run(
+            ["/usr/bin/curl", "--fail", "--silent", "--show-error", "--location", "--max-time", "8", DATA_URL],
+            capture_output=True,
+            check=True,
+        )
+        data = result.stdout
         CACHE.parent.mkdir(parents=True, exist_ok=True)
         CACHE.write_bytes(data)
-    except Exception:
-        if not CACHE.exists(): raise
+    except (OSError, subprocess.CalledProcessError) as error:
+        if not CACHE.exists():
+            detail = getattr(error, "stderr", b"").decode(errors="replace").strip()
+            raise RuntimeError(detail or "Could not connect to GitHub and no offline copy is available.") from error
         data = CACHE.read_bytes()
     return json.loads(data)["words"]
 
