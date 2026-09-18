@@ -32,12 +32,26 @@ def choose(words):
 
 def dialog(item):
     message = f'{item["word"]}  ·  {item["pronunciation"]}\n\n{item["meaning"]}\n\n“{item["poeticSentence"]}”\n\nAt work: {item["professionalSentence"]}\n\nWith someone dear: {item["romanticSentence"]}'
-    script = 'display dialog ' + json.dumps(message) + ' with title "Verse Daily" buttons {"Study online", "Open today’s page", "Done"} default button "Done" with icon note'
-    result = subprocess.run(["osascript", "-e", script], capture_output=True, text=True).stdout
-    if "Open today’s page" in result: webbrowser.open(SITE_URL)
+    script = '''on run argv
+        set dialogText to item 1 of argv
+        display dialog dialogText with title "Verse Daily" buttons {"Study online", "Open today's page", "Done"} default button "Done" with icon note
+    end run'''
+    completed = subprocess.run(
+        ["/usr/bin/osascript", "-e", script, message],
+        capture_output=True,
+        text=True,
+    )
+    if completed.returncode != 0 and "User canceled" not in completed.stderr:
+        raise RuntimeError(completed.stderr.strip() or "macOS could not display the word dialog.")
+    result = completed.stdout
+    if "Open today's page" in result: webbrowser.open(SITE_URL)
     elif "Study online" in result: webbrowser.open("https://www.google.com/search?q=" + urllib.parse.quote(item["word"] + " meaning examples"))
 
 if __name__ == "__main__":
     try: dialog(choose(fetch_words()))
     except Exception as exc:
-        subprocess.run(["osascript", "-e", 'display alert "Verse Daily could not load" message ' + json.dumps(str(exc))])
+        subprocess.run([
+            "/usr/bin/osascript", "-e",
+            'on run argv\ndisplay alert "Verse Daily could not load" message (item 1 of argv)\nend run',
+            str(exc),
+        ])
